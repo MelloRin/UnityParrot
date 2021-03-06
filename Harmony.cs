@@ -52,24 +52,31 @@ namespace UnityParrot
 
             foreach (var m in methods)
             {
-                var attrs = m.GetCustomAttributes(typeof(MethodPatchAttribute), true);
+				try
+				{
+					var attrs = m.GetCustomAttributes(typeof(MethodPatchAttribute), true);
 
-                if (attrs.Length > 0)
-                {
-                    foreach (var attr in attrs)
-                    {
-                        MethodPatchAttribute a = (MethodPatchAttribute)attr;
+					if (attrs.Length > 0)
+					{
+						foreach (var attr in attrs)
+						{
+							MethodPatchAttribute a = (MethodPatchAttribute)attr;
 
-                        HarmonyMethod harmonyMethod = GetPatch(m.Name, targetType);
+							HarmonyMethod harmonyMethod = GetPatch(m.Name, targetType);
 
-                        PerformPatch($"{targetType.Name} # {a.TargetMethod} ({m.Name})",
-                            a.TargetType.GetMethod(a.TargetMethod, (BindingFlags)62),
-                            a.PatchType == PatchType.Prefix ? harmonyMethod : null,
-                            a.PatchType == PatchType.Postfix ? harmonyMethod : null,
-                            a.PatchType == PatchType.Transpiler ? harmonyMethod : null);
-                    }
-                }
-            }
+							PerformPatch($"{targetType.Name} # {a.TargetMethod} ({m.Name})",
+								a.TargetType.GetMethod(a.TargetMethod, (BindingFlags)62),
+								a.PatchType == PatchType.Prefix ? harmonyMethod : null,
+								a.PatchType == PatchType.Postfix ? harmonyMethod : null,
+								a.PatchType == PatchType.Transpiler ? harmonyMethod : null);
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					Log.Info(e.ToString());
+				}
+			}
         }
 
         public static void PerformPatch(string patchName, MethodBase original, HarmonyMethod prefix = null, HarmonyMethod postfix = null, HarmonyMethod transpiler = null)

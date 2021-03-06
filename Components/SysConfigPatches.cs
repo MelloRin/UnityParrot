@@ -25,7 +25,7 @@ namespace UnityParrot.Components
             Harmony.MakeRET(typeof(MU3.Sys.Config), "get_isUseNetwork", false);
             Harmony.MakeRET(typeof(MU3.Sys.Config), "get_isUseAllnet", false);
             Harmony.MakeRET(typeof(MU3.Sys.Config), "get_isUseLocalCollab", false);
-            Harmony.MakeRET(typeof(MU3.Sys.Config), "get_isForceLogout", false);
+            //Harmony.MakeRET(typeof(MU3.Sys.Config), "get_isForceLogout", false);
             // get_serverUri
             // get_cameraType
             Harmony.MakeRET(typeof(MU3.Sys.Config), "get_isKeyboardInput", true);

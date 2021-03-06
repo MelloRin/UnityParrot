@@ -53,7 +53,28 @@ namespace UnityParrot.Components
             return true;
         }
 
-        [MethodPatch(PatchType.Prefix, typeof(PacketGetUserPreview), "proc")]
+		[MethodPatch(PatchType.Prefix, typeof(PacketGetUserTechCount), "proc")]
+		private static bool PacketGetUserTechCountProc(ref Packet.State __result, ref PacketGetUserTechCount __instance)
+		{
+			Log.Info($"PacketGetUserTechCount proc");
+
+			GetUserTechCount query = __instance.query as GetUserTechCount;
+
+			if (!FileSystem.Configuration.FileExists("UserTechCount.json"))
+			{
+				query.response_ = GetUserTechCountResponse.create();
+
+				query.response_.userId = Singleton<UserManager>.instance.UserId;
+
+				FileSystem.Configuration.SaveJson("UserTechCount.json", query.response_);
+			}
+
+			query.response_ = FileSystem.Configuration.LoadJson<GetUserTechCountResponse>("UserTechCount.json");
+
+			return true;
+		}
+
+		[MethodPatch(PatchType.Prefix, typeof(PacketGetUserPreview), "proc")]
         private static bool PacketGetUserPreviewGetResponse(ref Packet.State __result, ref PacketGetUserPreview __instance)
         {
             Log.Info($"PacketGetUserPreview proc");
